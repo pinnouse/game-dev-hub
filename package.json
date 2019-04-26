@@ -1,0 +1,32 @@
+{
+  "name": "game-dev-hub",
+  "version": "0.0.1",
+  "description": "Good site yes? Yes.",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint .",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pinnouse/game-dev-hub.git"
+  },
+  "author": "nicholas wong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pinnouse/game-dev-hub/issues"
+  },
+  "homepage": "https://github.com/pinnouse/game-dev-hub#readme",
+  "dependencies": {
+    "better-sqlite3": "^5.4.0",
+    "btoa": "^1.2.1",
+    "express": "^4.16.4",
+    "express-session": "^1.16.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0"
+  }
+}

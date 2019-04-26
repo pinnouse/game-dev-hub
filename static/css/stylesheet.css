@@ -1,0 +1,28 @@
+body {
+    background: #ffffff;
+    margin: 60px;
+    font-family: 'Muli', Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    color: #d34c4c;
+    font-size: 48pt;
+}
+
+p {
+    font-size: 14pt;
+}
+
+a {
+    display: inline-block;
+    text-decoration: none;
+    color: #6d1313;
+    font-size: 15pt;
+    padding: 8px;
+    background-color: #e9d0d0;
+    transition: background-color 340ms;
+}
+
+a:hover {
+    background-color: #daa0a0;
+}

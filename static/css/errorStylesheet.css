@@ -1,0 +1,31 @@
+body {
+    background: #f5ecec;
+    margin: 60px;
+    font-family: 'Muli', Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    color: #d34c4c;
+    font-size: 48pt;
+    user-select: none;
+}
+
+p {
+    font-size: 14pt;
+    user-select: none;
+}
+
+a {
+    display: inline-block;
+    text-decoration: none;
+    color: #6d1313;
+    font-size: 15pt;
+    padding: 8px;
+    background-color: #e9d0d0;
+    user-select: none;
+    transition: background-color 340ms;
+}
+
+a:hover {
+    background-color: #daa0a0;
+}
