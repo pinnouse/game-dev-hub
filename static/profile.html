@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Manage Profile :: UHSGDC</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Inconsolata|Muli" rel="stylesheet">
+        <link href="css/[ifuser s]][ifnuser errorS]]tylesheet.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        [ifuser
+        <h1 style="text-transform: uppercase;"><span class="fade-up"><img src="{avatar}?size=64"> {username}</span>'S PROFILE SETTINGS</h1>
+        <nav>
+            <a href="./">Home</a>
+            <a href="./connect/logout">Logout</a>
+        </nav>
+
+        <h2>CURRENT BIO</h2>
+        <div id="bio">{bio}</div>
+
+        <h2>CHANGE BIO</h2>
+        <form id="form" method="POST">
+            <textarea name="bioText" rows=10 maxlength=900>{bio}</textarea>
+            <button type="submit">Save</button>
+        </form>
+
+        <script type="text/javascript">
+            if ({failed})
+                $('#form').prepend(`
+                    <span class="error">
+                        Failed to update bio.
+                        Check to make sure you\'re not exceeding the 900 character limit or inserting any &lt;script&gt; tags.
+                    </span>
+                `);
+        </script>
+        ]]
+        [ifnuser
+        <h1>UNAUTHORIZED</h1>
+        <p>You must be logged in before you can access this.</p>
+        <a href="./connect/login">Connect</a>
+        ]]
+    </body>
+</html>

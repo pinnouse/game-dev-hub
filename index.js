@@ -15,6 +15,7 @@
 'use strict';
 
 const session = require('express-session');
+const bodyParser = require('body-parser');
 const express = require('express');
 
 const path = require('path');
@@ -26,9 +27,13 @@ const request = require('request-promise-native');
 
 var app = express();
 
+const DB = require('./database');
+const db = new DB();
+
 const PORT = 8080;
 
 const GAME_DEV_SERVER_ID = "489531295848726528";
+
 
 app.engine('html', function(filePath, options, callback) {
     fs.readFile(filePath, function(err, content) {
@@ -36,14 +41,17 @@ app.engine('html', function(filePath, options, callback) {
 
         var rendered = content.toString();
         if (options.ifuser) {
-            rendered = rendered
-                .replace(/\[ifuser ([^\]]+)]/gim, "$1")
-                .replace(/\[ifnuser [^\]]+]/gim, "")
-                .replace(/{username}/gm, options.username)
-                .replace(/{avatar}/gm, options.avatar);
+            rendered = rendered.replace(/\[ifuser[\s]?([^\]]+)\]\]/gim, "$1").replace(/\[ifnuser[\s]?[^\]]+\]\]/gim, "");
         } else {
-            rendered = rendered.replace(/\[ifnuser ([^\]]+)]/gim, "$1").replace(/\[ifuser [^\]]+]/gim, "");
+            rendered = rendered.replace(/\[ifnuser[\s]?([^\]]+)\]\]/gim, "$1").replace(/\[ifuser[\s]?[^\]]+\]\]/gim, "");
         }
+
+        rendered = rendered.replace(/{username}/gm, options.username)
+        .replace(/{avatar}/gm, options.avatar)
+        .replace(/{bio}/gm, options.bio)
+        .replace(/{failed}/gm, options.failed)
+        .replace(/{posts}/gm, options.posts)
+        .replace(/{users}/gm, JSON.stringify(options.users));
         return callback(null, rendered);
     });
 });
@@ -56,12 +64,22 @@ app.use(session({
         return genuuid()
     },
     secret: process.env.CLIENT_SECRET,
-    access_token: "",
-    refresh_tokne: "",
     cookie: {
         secure: false
     }
 }));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+
+// Remove trailing
+app.use((req, res, next) => {
+    const test = /\?[^]*\//.test(req.url);
+    if (req.url.substr(-1) === '/' && req.url.length > 1 && !test)
+        res.redirect(301, req.url.slice(0, -1));
+    else
+    next();
+});
 
 app.get('/', async (req, res) => {
     if (req.query.token && req.query.refresh) {
@@ -86,8 +104,10 @@ app.get('/', async (req, res) => {
             json: true
         });
 
-        console.log(user);
-        console.log(guilds);
+        console.log(req.query);
+
+        //console.log(user);
+        //console.log(guilds);
 
         // Must be a verified user
         if (!user.verified) {
@@ -100,25 +120,70 @@ app.get('/', async (req, res) => {
             res.sendFile(path.join(__dirname, 'static/joinServer.html'));
             return;
         }
+
         
         // Can set session params
         if (req.session.userID !== user.id) {
             req.session.userID = user.id;
             req.session.username = user.username;
             req.session.avatar = `https://cdn.discordapp.com/${user.avatar ? `avatars/${user.id}/${user.avatar}.png` : `embed/avatars/${user.discriminator % 5}`}`;
+
+            if (!db.hasUser(req.session.userID)) {
+                db.addUser(
+                    req.session.userID,
+                    req.session.username,
+                    req.session.avatar,
+                    req.query.token,
+                    req.query.refresh,
+                    "No bio provided.");
+            }
         }
 
         res.redirect('/');
         return;
     }
-    res.render('index', { ifuser: req.session.userID != undefined, username: req.session.username, avatar: req.session.avatar });
+    res.render('index', { ifuser: req.session.userID !== undefined, username: req.session.username, avatar: req.session.avatar });
+});
+
+app.get('/profile', (req, res) => {
+    let bio = "";
+    if (req.session.userID && db.hasUser(req.session.userID)) {
+        bio = db.getUserBio(req.session.userID);
+    }
+    res.render('profile', { ifuser: req.session.userID !== undefined, username: req.session.username, avatar: req.session.avatar, bio: bio, failed: false });
+});
+
+app.post('/profile', (req, res) => {
+    let failed = true;
+    let bio = "";
+    if (req.session.userID && req.body.bioText) {
+        bio = db.getUserBio(req.session.userID);
+        failed = !db.updateUserBio(req.session.userID, req.body.bioText);
+        if (!failed) bio = req.body.bioText;
+    }
+    res.render('profile', { ifuser: req.session.userID !== undefined, username: req.session.username, avatar: req.session.avatar, bio: bio, failed: failed });
+});
+
+app.get('/users', (req, res) => {
+    let users = db.getAllUsers();
+    res.render('users', { ifuser: req.session.userID !== undefined, username: req.session.username, avatar: req.session.avatar, users: users });
+});
+
+app.get('/users/:userId', (req, res) => {
+    let user = db.getUserByUID(req.params.userId);
+    let failed = user === undefined || user == {};
+    res.render('user', {ifuser: !failed, username: user.username, avatar: user.avatar, bio: user.bio });
+});
+
+app.get('/logoutSuccess', (req, res) => {
+    res.sendFile(path.join(__dirname, 'static/logoutSuccess.html'));
 });
 
 app.get('/invalidToken', (req, res) => {
     res.sendFile(path.join(__dirname, 'static/invalidToken.html'));
 });
 
-app.use('/connect', require('./api/discord'));
+app.use('/connect', require('./router/discord'));
 
 app.use('/css', express.static(path.join(__dirname, 'static', 'css')));
 

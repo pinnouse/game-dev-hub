@@ -15,9 +15,9 @@ router.get('/login', (req, res) => {
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect}&response_type=code&scope=connections%20guilds%20email%20identify`);
 });
 
-router.get('/callback', async (req, res, next) => {
+router.get('/callback', async (req, res) => {
     if (!req.query.code) {
-        res.status(400).send({status: 'ERROR', error: 'Not authenticated properly, please retry' });
+        res.status(400).send({status: 'ERROR', error: 'Not authenticated properly, please retry.' });
         return;
     }
     const code = req.query.code;
@@ -39,6 +39,15 @@ router.get('/callback', async (req, res, next) => {
         res.redirect('/invalidToken');
     }
 
+});
+
+router.get('/logout', (req, res) => {
+    if (req.session.userID) {
+        req.session.destroy();
+        res.redirect('/logoutSuccess');
+    } else {
+        res.redirect('/');
+    }
 });
 
 module.exports = router;

@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS users(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  discId INTEGER NOT NULL,
+  username TEXT NOT NULL,
+  avatar VARCHAR(50) NOT NULL,
+  access_token VARCHAR(30),
+  refresh_token VARCHAR(30),
+  bio VARCHAR(900)
+);
+
+CREATE TABLE IF NOT EXISTS posts(
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  associated_user INTEGER NOT NULL,
+  title VARCHAR(50) NOT NULL,
+  description VARCHAR(900),
+  link VARCHAR(50) NOT NULL
+);

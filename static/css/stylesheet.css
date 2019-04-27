@@ -5,24 +5,118 @@ body {
 }
 
 h1 {
-    color: #d34c4c;
+    display: block;
+    position: relative;
+    color: #af86d4;
+    border-bottom: 8px solid #af86d4;
     font-size: 48pt;
+    user-select: none;
+}
+
+h1::before {
+    content: "";
+    position: absolute;
+    margin-top: 14px;
+    top: 100%;
+    left: 0;
+    height: 4px;
+    width: 43%;
+    background-color: #af86d4;
+}
+
+h2 {
+    display: block;
+    position: relative;
+    color: #af86d4;
+    font-size: 36pt;
+    user-select: none;
 }
 
 p {
     font-size: 14pt;
+    user-select: none;
+}
+
+.error {
+    color: #ff7864;
 }
 
 a {
     display: inline-block;
     text-decoration: none;
-    color: #6d1313;
+    color: #5b136d;
     font-size: 15pt;
     padding: 8px;
-    background-color: #e9d0d0;
+    background-color: #e9d0e6;
+    user-select: none;
     transition: background-color 340ms;
 }
 
 a:hover {
-    background-color: #daa0a0;
+    background-color: #caa0da;
+}
+
+textarea {
+    display: block;
+    margin: 40px 0;
+    width: 60%;
+    resize: none;
+    padding: 12px;
+    font-family: 'Inconsolata', 'Courier New', Courier, monospace;
+    border: solid 1px gray;
+    box-shadow: 2px 4px 2px 2px rgba(26, 26, 26, 0.168);
+    background-color: #fefefe;
+    transition: background-color 230ms;
+}
+
+textarea:focus {
+    background-color: #fdf9ff;
+    outline: none;
+}
+
+button {
+    display: inline-block;
+    color: #f1e0f5;
+    font-size: 15pt;
+    padding: 8px;
+    background-color: #5c2d56;
+    user-select: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 240ms;
+}
+
+button:hover {
+    color: #fff;
+    background-color: #bd9eb9;
+}
+
+body > h1 > span.fade-up {
+    display: inline-block;
+    position: relative;
+    animation: 440ms cubic-bezier(0.175, 0.885, 0.32, 1.575) forwards fade-up;
+}
+
+body > h1 > span > img,
+body > h1 > img {
+    border-radius: 50%;
+    vertical-align: bottom;
+    padding: 8px;
+}
+
+@keyframes fade-up {
+    0% {
+        top: 60px;
+        left: 0;
+        opacity: 0;
+    }
+    100% {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+#bio {
+    margin: 18px;
+    font-size: 14pt;
 }

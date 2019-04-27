@@ -1,0 +1,43 @@
+.list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 38px 0;
+    background-color: #faf9fd;
+}
+
+.list a {
+    display: inline-block;
+    width: 30%;
+    margin: 16px;
+    height: 80px;
+    padding: 10px;
+    font-size: 30px;
+    background-color: #f7f0fa;
+    color: #5b136d;
+    text-decoration: none;
+    text-transform: uppercase;
+    user-select: none;
+    transition: background-color 220ms, color 230ms;
+}
+
+.list a.me {
+    background-color: #ffffff;
+    color: #8913a7;
+}
+
+.list a:hover {
+    background-color: #caa0da;
+    color: #ffffff;
+}
+
+.list span > * {
+    vertical-align: middle;
+}
+
+.list span > img {
+    height: 70px;
+    padding: 5px;
+    margin-right: 24px;
+    border-radius: 50%;
+}

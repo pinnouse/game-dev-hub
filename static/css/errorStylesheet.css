@@ -5,9 +5,23 @@ body {
 }
 
 h1 {
+    display: block;
+    position: relative;
     color: #d34c4c;
+    border-bottom: 8px solid #d34c4c;
     font-size: 48pt;
     user-select: none;
+}
+
+h1::before {
+    content: "";
+    position: absolute;
+    margin-top: 14px;
+    top: 100%;
+    left: 0;
+    height: 4px;
+    width: 43%;
+    background-color: #d34c4c;
 }
 
 p {

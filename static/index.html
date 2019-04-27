@@ -7,7 +7,17 @@
         <link href="css/stylesheet.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <h1>Welcome</h1> [ifuser Yes, welcome <b>{username}</b> <img src="{avatar}?size=64" />]
-        <p>owo makes yourself at home.</p>
+
+        <h1>WELCOME[ifuser , <span class="fade-up" style="text-transform: uppercase;">{username}</span>]]</h1>
+        <nav>
+            <a href="./games">Games</a>
+            <a href="./users">Users</a>
+            [ifuser 
+            <a href="./profile">Manage Profile</a>
+            <a href="./connect/logout">Logout</a>
+            ]]
+            [ifnuser <a href="./connect/login">Connect</a>]]
+        </nav>
+        <p>owo no cringe announcements here.</p>
     </body>
 </html>

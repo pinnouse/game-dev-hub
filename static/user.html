@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Users :: UHSGDC</title>
+        <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+        <link href="../css/[ifuser s]][ifnuser errorS]]tylesheet.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        [ifuser
+        <h1 style="text-transform: uppercase;"><img src="{avatar}?size=64"> {username}'S PAGE</h1>
+        <nav>
+            <a href="../">Home</a>
+            <a href=".">Back to Users</a>
+        </nav>
+        <h2>BIO</h2>
+        <div id="bio">{bio}</div>
+        ]]
+        [ifnuser
+        <h1>ERROR</h1>
+        <p>That user could not be found.</p>
+        <a href=".">Back to Users</a>
+        ]]
+    </body>
+</html>
