@@ -104,11 +104,6 @@ app.get('/', async (req, res) => {
             json: true
         });
 
-        console.log(req.query);
-
-        //console.log(user);
-        //console.log(guilds);
-
         // Must be a verified user
         if (!user.verified) {
             res.sendFile(path.join(__dirname, 'static/notVerified.html'));

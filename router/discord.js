@@ -2,17 +2,18 @@
 
 const express = require('express');
 
+const qs = require('querystring');
+
 const request = require('request-promise-native');
-const btoa = require('btoa');
 
 const router = express.Router();
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const redirect = encodeURIComponent('http://localhost:8080/connect/callback');
+const REDIRECT_URI = 'http://localhost:8080/connect/callback';
 
 router.get('/login', (req, res) => {
-    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${redirect}&response_type=code&scope=connections%20guilds%20email%20identify`);
+    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=connections%20guilds%20email%20identify`);
 });
 
 router.get('/callback', async (req, res) => {
@@ -20,15 +21,28 @@ router.get('/callback', async (req, res) => {
         res.status(400).send({status: 'ERROR', error: 'Not authenticated properly, please retry.' });
         return;
     }
+
     const code = req.query.code;
-    const creds = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
+
+    const data = {
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+        'grant_type': 'authorization_code',
+        'code': code,
+        'redirect_uri': REDIRECT_URI,
+        'scope': 'identify email connections guilds'
+    };
+
+    const formData = qs.stringify(data);
 
     const options = {
-        url: `https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`,
+        url: `https://discordapp.com/api/oauth2/token`,
         method: 'POST',
         headers: {
-            Authorization: `Basic ${creds}`
+            'Content-Length': formData.length,
+            'Content-Type': 'application/x-www-form-urlencoded'
         },
+        body: formData,
         json: true
     };
 
